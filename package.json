@@ -1,0 +1,12 @@
+{
+  "name": "box-opening",
+  "version": "1.0.0",
+  "main": "metadata.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "ethers": "^5.6.3",
+    "form-data": "^4.0.0",
+    "solc": "0.8.0"
+  }
+}
