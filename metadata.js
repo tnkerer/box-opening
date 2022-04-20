@@ -1,6 +1,7 @@
 const ethers = require("ethers");
 const artifacts = require("./abi/PlanetHorseNFT.json");
 const axios = require("axios");
+const randomizer = require("./randomizer")
 const tokenTier = process.argv[2];
 const tokenId = process.argv[3];
 const {
@@ -11,33 +12,16 @@ const {
   IPFSBaseUrl,
 } = require("./secrets.json");
 
-// Randomizer
-
-function populateChoices(values_, weights_) {
-  let filledArray = [];
-  for (var i = 0; i < values_.length; i++) {
-    for (var j = 0; j < weights_[i]; j++) {
-      filledArray.push(values_[i]);
-    }
-  }
-  return filledArray;
-}
-
-function choose(choices) {
-  var index = Math.floor(Math.random() * choices.length);
-  return choices[index];
-}
 
 // Data Sets for Randomizer
 
 var commonDataset = {
   rarity: "Common",
-  speed: choose(populateChoices([1, 2, 3, 4], [20, 20, 30, 30])),
-  susten: choose(populateChoices([1, 2, 3, 4], [20, 20, 30, 30])),
-  power: choose(populateChoices([1, 2, 3, 4], [20, 20, 30, 30])),
-  sprint: choose(populateChoices([1, 2, 3, 4], [20, 20, 30, 30])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([1, 2, 3, 4], [20, 20, 30, 30]),
+  susten: randomizer.choose([1, 2, 3, 4], [20, 20, 30, 30]),
+  power: randomizer.choose([1, 2, 3, 4], [20, 20, 30, 30]),
+  sprint: randomizer.choose([1, 2, 3, 4], [20, 20, 30, 30]),
+  image: randomizer.choose(
       [
         ["common1.gif", "Dark Brown Horse"],
         ["common2.gif", "Gray Horse"],
@@ -47,19 +31,17 @@ var commonDataset = {
         ["common6.gif", "Light Gray Horse"],
       ],
       [17, 17, 16, 16, 17, 17]
-    )
   ),
   energy: 60,
 };
 
 var rareDataset = {
   rarity: "Rare",
-  speed: choose(populateChoices([4, 5, 6, 7, 8], [20, 20, 20, 20, 20])),
-  susten: choose(populateChoices([4, 5, 6, 7, 8], [20, 20, 20, 20, 20])),
-  power: choose(populateChoices([4, 5, 6, 7, 8], [20, 20, 20, 20, 20])),
-  sprint: choose(populateChoices([4, 5, 6, 7, 8], [20, 20, 20, 20, 20])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([4, 5, 6, 7, 8], [20, 20, 20, 20, 20]),
+  susten: randomizer.choose([4, 5, 6, 7, 8], [20, 20, 20, 20, 20]),
+  power: randomizer.choose([4, 5, 6, 7, 8], [20, 20, 20, 20, 20]),
+  sprint: randomizer.choose([4, 5, 6, 7, 8], [20, 20, 20, 20, 20]),
+  image: randomizer.choose(
       [
         ["rare1.gif", "Blue Horse"],
         ["rare2.gif", "Cyan Horse"],
@@ -69,19 +51,17 @@ var rareDataset = {
         ["rare6.gif", "Pink Horse"],
       ],
       [17, 17, 16, 16, 17, 17]
-    )
   ),
   energy: 75,
 };
 
 var srareDataset = {
   rarity: "Super Rare",
-  speed: choose(populateChoices([8, 9, 10, 11, 12], [20, 20, 20, 20, 20])),
-  susten: choose(populateChoices([8, 9, 10, 11, 12], [20, 20, 20, 20, 20])),
-  power: choose(populateChoices([8, 9, 10, 11, 12], [20, 20, 20, 20, 20])),
-  sprint: choose(populateChoices([8, 9, 10, 11, 12], [20, 20, 20, 20, 20])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([8, 9, 10, 11, 12], [20, 20, 20, 20, 20]),
+  susten: randomizer.choose([8, 9, 10, 11, 12], [20, 20, 20, 20, 20]),
+  power: randomizer.choose([8, 9, 10, 11, 12], [20, 20, 20, 20, 20]),
+  sprint: randomizer.choose([8, 9, 10, 11, 12], [20, 20, 20, 20, 20]),
+  image: randomizer.choose(
       [
         ["srare1.gif", "Black Evil Horse"],
         ["srare2.gif", "Blue Evil Horse"],
@@ -91,19 +71,17 @@ var srareDataset = {
         ["srare6.gif", "Pink Love Horse"],
       ],
       [17, 17, 16, 16, 17, 17]
-    )
   ),
   energy: 90,
 };
 
 var epicDataset = {
   rarity: "Epic",
-  speed: choose(populateChoices([12, 13, 14, 15, 16], [20, 20, 20, 20, 20])),
-  susten: choose(populateChoices([12, 13, 14, 15, 16], [20, 20, 20, 20, 20])),
-  power: choose(populateChoices([12, 13, 14, 15, 16], [20, 20, 20, 20, 20])),
-  sprint: choose(populateChoices([12, 13, 14, 15, 16], [20, 20, 20, 20, 20])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([12, 13, 14, 15, 16], [20, 20, 20, 20, 20]),
+  susten: randomizer.choose([12, 13, 14, 15, 16], [20, 20, 20, 20, 20]),
+  power: randomizer.choose([12, 13, 14, 15, 16], [20, 20, 20, 20, 20]),
+  sprint: randomizer.choose([12, 13, 14, 15, 16], [20, 20, 20, 20, 20]),
+  image: randomizer.choose(
       [
         ["epic1.gif", "Wooden Horse"],
         ["epic2.gif", "Exquisite Black Horse"],
@@ -112,19 +90,17 @@ var epicDataset = {
         ["epic5.gif", "Exquisite White Horse"],
       ],
       [20, 20, 20, 20, 20]
-    )
   ),
   energy: 105,
 };
 
 var legendDataset = {
   rarity: "Legendary",
-  speed: choose(populateChoices([16, 17, 18, 19, 20], [20, 20, 20, 20, 20])),
-  susten: choose(populateChoices([16, 17, 18, 19, 20], [20, 20, 20, 20, 20])),
-  power: choose(populateChoices([16, 17, 18, 19, 20], [20, 20, 20, 20, 20])),
-  sprint: choose(populateChoices([16, 17, 18, 19, 20], [20, 20, 20, 20, 20])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([16, 17, 18, 19, 20], [20, 20, 20, 20, 20]),
+  susten: randomizer.choose([16, 17, 18, 19, 20], [20, 20, 20, 20, 20]),
+  power: randomizer.choose([16, 17, 18, 19, 20], [20, 20, 20, 20, 20]),
+  sprint: randomizer.choose([16, 17, 18, 19, 20], [20, 20, 20, 20, 20]),
+  image: randomizer.choose(
       [
         ["legend1.gif", "Undead Horse"],
         ["legend2.gif", "Ghost Horse"],
@@ -132,26 +108,23 @@ var legendDataset = {
         ["legend4.gif", "Nightmare"],
       ],
       [25, 25, 25, 25]
-    )
   ),
   energy: 120,
 };
 
 var slegendDataset = {
   rarity: "Super Legendary",
-  speed: choose(populateChoices([20, 21, 22, 23, 24], [20, 20, 20, 20, 20])),
-  susten: choose(populateChoices([20, 21, 22, 23, 24], [20, 20, 20, 20, 20])),
-  power: choose(populateChoices([20, 21, 22, 23, 24], [20, 20, 20, 20, 20])),
-  sprint: choose(populateChoices([20, 21, 22, 23, 24], [20, 20, 20, 20, 20])),
-  image: choose(
-    populateChoices(
+  speed: randomizer.choose([20, 21, 22, 23, 24], [20, 20, 20, 20, 20]),
+  susten: randomizer.choose([20, 21, 22, 23, 24], [20, 20, 20, 20, 20]),
+  power: randomizer.choose([20, 21, 22, 23, 24], [20, 20, 20, 20, 20]),
+  sprint: randomizer.choose([20, 21, 22, 23, 24], [20, 20, 20, 20, 20]),
+  image: randomizer.choose(
       [
         ["slegend1.gif", "Glitch Horse"],
         ["slegend2.gif", "Wildfire"],
         ["slegend3.gif", "Hologram Horse"],
       ],
       [33, 34, 33]
-    )
   ),
   energy: 135,
 };
@@ -161,8 +134,7 @@ var slegendDataset = {
 function setDataset(tokenTier_) {
   let dataset;
   if (tokenTier_ == "common")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -172,11 +144,9 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [400, 300, 200, 70, 25, 5]
-      )
     );
   if (tokenTier_ == "rare")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -186,11 +156,9 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [200, 400, 200, 125, 70, 5]
-      )
     );
   if (tokenTier_ == "srare")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -200,11 +168,9 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [150, 250, 400, 125, 70, 5]
-      )
     );
   if (tokenTier_ == "epic")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -214,11 +180,9 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [75, 125, 300, 400, 80, 20]
-      )
     );
   if (tokenTier_ == "legend")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -228,11 +192,9 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [15, 85, 200, 200, 400, 100]
-      )
     );
   if (tokenTier_ == "slegend")
-    dataset = choose(
-      populateChoices(
+    dataset = randomizer.choose(
         [
           commonDataset,
           rareDataset,
@@ -242,7 +204,6 @@ function setDataset(tokenTier_) {
           slegendDataset,
         ],
         [0, 0, 0, 10, 50, 40]
-      )
     );
   return dataset;
 }
@@ -288,7 +249,7 @@ var metadata = {
 };
 
 // @dev you can check if the metadata is correct by toggling off the following comment:
-//console.log(metadata)
+// console.log(metadata)
 
 // Writing to the blockchain the address pointing to the Metadata on IPFS
 
